@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-pvc
+  namespace: mongo
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard-rwo  # default - balanced disk in gcp
+  resources:
+    requests:
+      storage: 2Gi 

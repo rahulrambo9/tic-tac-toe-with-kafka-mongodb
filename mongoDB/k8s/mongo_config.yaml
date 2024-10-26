@@ -1,0 +1,12 @@
+If you need custom MongoDB configurations, consider a separate ConfigMap for that:
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-config
+  namespace: mongo
+data:
+  mongodb.conf: |
+    storage:
+      dbPath: /data/db
+    replication:
+        replSetName: "rs0"

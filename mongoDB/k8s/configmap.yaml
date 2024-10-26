@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-scripts
+  namespace: mongo
+data:
+  username: rahul
+  db_create.js: |
+    use myDatabase;
+
+    // Create a collection and insert documents
+    db.myCollection.insertMany([
+      { name: "Alice", age: 30 },
+      { name: "Bob", age: 25 }
+    ]);
+    
+  # mongodb.conf: |
+  #   storage:
+  #     dbPath: /data/db
+  #   replication:
+  #       replSetName: "rs0"
+
+
+
+# ConfigMap
+# It is an api object used to store non-confedential data in key-value pairs

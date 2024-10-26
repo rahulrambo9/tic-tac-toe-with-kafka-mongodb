@@ -1,0 +1,59 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: {{ .Values.kafka.clusterName }}
+  namespace: kafka
+  annotations:
+    strimzi.io/node-pools: {{ if .Values.kafka.useKraft }}enabled{{ else }}disabled{{ end }}
+    {{- if .Values.kafka.useKraft }}
+    strimzi.io/kraft: enabled
+    {{ end }}
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "1"
+spec:
+  kafka:
+    version: {{ .Values.kafka.version }}
+    replicas: {{ if .Values.kafka.useKraft }}1{{ else }}3{{ end }}  # Use 1 for Kraft, 3 for Zookeeper
+    listeners:
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+      - name: tls
+        port: 9093
+        type: internal
+        tls: true
+    config:
+      offsets.topic.replication.factor: 1
+      transaction.state.log.replication.factor: 1
+      transaction.state.log.min.isr: 1
+      default.replication.factor: 1
+      min.insync.replicas: 1
+
+  {{- if .Values.kafka.useKraft }}
+  nodePools:
+    - name: dual-role
+      replicas: 1
+      roles:
+        - controller
+        - broker
+      storage:
+        type: jbod
+        volumes:
+          - id: 0
+            type: persistent-claim
+            size: 100Gi
+            deleteClaim: false
+            kraftMetadata: shared
+  {{- else }}
+  zookeeper:
+    replicas: 1
+    storage:
+      type: persistent-claim
+      size: 100Gi
+      deleteClaim: false
+  {{- end }}
+
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}

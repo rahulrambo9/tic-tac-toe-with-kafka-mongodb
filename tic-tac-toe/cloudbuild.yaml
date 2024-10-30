@@ -24,6 +24,12 @@ steps:
           _CURRENT_VERSION=$(cat version.txt | sed 's/^v//')
           echo "Current version in version.txt: v$_CURRENT_VERSION"
         
+          # If _CURRENT_VERSION is empty, set it to 0
+          if [ -z "$_CURRENT_VERSION" ]; then
+            _CURRENT_VERSION=0
+            echo "No version found. Setting current version to v$_CURRENT_VERSION."
+          fi
+
           # Validate if _CURRENT_VERSION is a valid number
           if [ $_CURRENT_VERSION -eq $_CURRENT_VERSION ] 2>/dev/null; then
             # Increment the version
@@ -36,8 +42,8 @@ steps:
             exit 1
           fi
         else
-          echo "version.txt not found!"
-          exit 1
+          echo "version.txt not found! Setting version to v0."
+          echo "v0" > version.txt
         fi
 
   # Step 3: Output the incremented version

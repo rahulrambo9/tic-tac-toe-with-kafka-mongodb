@@ -1,21 +1,25 @@
 substitutions:
   _USER: "Rahul"
+  PROJECT_ID: "65562"  # Set your actual project ID here
 
 steps:
-- name: 'ubuntu'
-  script: |
-    #!/usr/bin/env bash
-    echo "Hello ${_USER}"
-- name: 'ubuntu'
-  script: |
-    #!/usr/bin/env bash
-    echo "Your project ID is $PROJECT_ID"
+  - name: 'ubuntu'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Hello ${_USER}"
+  
+  - name: 'ubuntu'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Your project ID is ${PROJECT_ID}"
+
 options:
   automapSubstitutions: true
-
-
-options:
   logging: CLOUD_LOGGING_ONLY  # Use this logging option to avoid the error
 
 # Optional: Specify a timeout
-timeout: '1200s'  # Adjust the timeout as needed  
+timeout: '1200s'  # Adjust the timeout as needed

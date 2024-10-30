@@ -20,18 +20,19 @@ steps:
       - '-c'
       - |
         cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
+        
         # Check if version.txt exists; if not, initialize it with v1
         if [ ! -f version.txt ]; then 
           echo "v1" > version.txt  
           echo "Initialized version.txt with v1."
         fi
 
-        # Read the current version
-        CURRENT_VERSION=$(cat version.txt | sed 's/v//')  # Remove "v" to get the number
+        # Read the current version (remove "v" to get the number)
+        CURRENT_VERSION=$(cat version.txt | sed 's/v//')  
         echo "Current version in version.txt: v${CURRENT_VERSION}"
 
         # Increment the version number
-        NEW_VERSION=$((CURRENT_VERSION + 1))  # Increment the numeric part
+        NEW_VERSION=$((CURRENT_VERSION + 1))  
         echo "New version calculated: v${NEW_VERSION}"
 
         # Write the new version back to version.txt

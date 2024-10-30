@@ -5,7 +5,7 @@ steps:
 - name: 'ubuntu'
   script: |
     #!/usr/bin/env bash
-    echo "Hello $_USER"
+    echo "Hello" ${_USER}
 - name: 'ubuntu'
   script: |
     #!/usr/bin/env bash

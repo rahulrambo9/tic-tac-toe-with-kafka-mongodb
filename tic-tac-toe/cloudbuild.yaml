@@ -11,9 +11,12 @@ steps:
         git clone https://github.com/rahulrambo9/tic-tac-toe-with-kafka-mongodb.git
         cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
         echo "Repository cloned and navigated to subdirectory."
-        cat version.txt
+        echo "My version.txt contains value: $(cat version.txt)"
+        
         _CURRENT_VERSION=$(cat version.txt | sed 's/^v//')
-        echo "Current version in version.txt: v$_CURRENT_VERSION"
+        echo "Current version in version.txt: $_CURRENT_VERSION"
+        _NEW_VERSION=$(( _CURRENT_VERSION + 1 ))
+        echo "Updated version: v$_NEW_VERSION"
 
   # Step 2: Read the current version from version.txt and increment it
   # - name: 'ubuntu'

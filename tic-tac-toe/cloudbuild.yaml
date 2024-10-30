@@ -16,6 +16,27 @@ steps:
       - '-c'
       - |
         echo "Your TagName is ${_TAG_NAME}"
+    # Step 2: Read, increment, and display the version from version.txt
+  - name: 'ubuntu'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        export TAG_VERSION=$(($(cat version.txt) + 1))
+        echo "${TAG_VERSION}" > version.txt
+        echo "Hello ${_USER}"
+        echo "Your new TagName is v${TAG_VERSION}"
+
+  # Step 3: Commit and push the updated version.txt back to the repository
+  - name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        cd your-repo-name
+        git add version.txt
+        git commit -m "Increment version to v${TAG_VERSION}"
+        git push origin main  # Make sure your branch name is correct      
 
 options:
   automapSubstitutions: true

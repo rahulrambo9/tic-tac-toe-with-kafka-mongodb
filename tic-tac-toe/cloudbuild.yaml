@@ -1,9 +1,8 @@
 substitutions:
   _USER: "Rahul"
-  _TAG_NAME: "v1"
 
 steps:
-  # Step 1: Clone the Repository
+  # Step 1: Clone the repository
   - name: 'gcr.io/cloud-builders/git'
     entrypoint: 'bash'
     args:
@@ -13,44 +12,49 @@ steps:
         cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
         echo "Repository cloned and navigated to subdirectory."
 
-  # Step 2: Read, Increment, and Display the Version from version.txt
+  # Step 2: Read the current version from version.txt
   - name: 'ubuntu'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
         cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
-        
-        # Check if version.txt exists; if not, initialize it with v1
-        if [ ! -f version.txt ]; then 
-          echo "v1" > version.txt  
-          echo "Initialized version.txt with v1."
+        if [ -f version.txt ]; then
+          CURRENT_VERSION=$(cat version.txt | sed 's/v//')  # Strip the 'v' for incrementing
+          echo "Current version in version.txt: v$CURRENT_VERSION"
+          NEW_VERSION=$((CURRENT_VERSION + 1))  # Increment version number
+          echo "Updated version: v$NEW_VERSION"
+          echo "v$NEW_VERSION" > version.txt  # Write new version back to file
+        else
+          echo "version.txt not found!"
+          exit 1
         fi
 
-        # Read the current version (remove "v" to get the number)
-        CURRENT_VERSION=$(cat version.txt | sed 's/v//')  
-        echo "Current version in version.txt: v${CURRENT_VERSION}"
-
-        # Increment the version number
-        NEW_VERSION=$((CURRENT_VERSION + 1))  
-        echo "New version calculated: v${NEW_VERSION}"
-
-        # Write the new version back to version.txt
-        echo "v${NEW_VERSION}" > version.txt  
-        echo "Updated version.txt to new version: v${NEW_VERSION}"
-
-  # Step 3: Print the Version to Confirm
+  # Optional: Print user information
   - name: 'ubuntu'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
+        echo "Hello ${_USER}"
+        echo "Your new TagName is v${NEW_VERSION}"
+
+  # Step 4: Commit and push the updated version.txt back to the repository
+  - name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
         cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
-        echo "Final version in version.txt should be:"
-        cat version.txt
+        git config --global user.email "rahulvhd9@gmail.com"
+        git config --global user.name "rahulrambo9"
+        git add version.txt
+        git commit -m "Increment version to v${NEW_VERSION}"
+        git push origin main  # Make sure your branch name is correct   
 
 options:
   automapSubstitutions: true
-  logging: CLOUD_LOGGING_ONLY
+  logging: CLOUD_LOGGING_ONLY  # Use this logging option to avoid the error
 
-timeout: '1200s'
+# Optional: Specify a timeout
+timeout: '1200s'  # Adjust the timeout as needed

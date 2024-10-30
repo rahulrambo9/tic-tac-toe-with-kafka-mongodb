@@ -12,10 +12,8 @@ steps:
         git clone https://github.com/rahulrambo9/tic-tac-toe-with-kafka-mongodb.git
         cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
         echo "Repository cloned and navigated to subdirectory."
-        echo "My name is $_USER"
-        echo "My Tag Name is ${_TAG_NAME}"
 
-  # Step 2: Read, Increment, and Display the Version from version.txt
+  # Step 2: Read, Strip Prefix, Increment, and Display the Version from version.txt
   - name: 'ubuntu'
     entrypoint: 'bash'
     args:
@@ -23,14 +21,15 @@ steps:
       - |
         cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
         if [ ! -f version.txt ]; then 
-          echo "version.txt not found. Initializing with version 0."
-          echo "0" > version.txt
+          echo "v1" > version.txt  # Initialize version.txt with "v1" if it doesn't exist
+          echo "Initialized version.txt with v1."
         fi
         echo "Current version in version.txt:"
         cat version.txt
-        export _TAG_VERSION=$(($(cat version.txt) + 1))
-        echo "${_TAG_VERSION}" > version.txt
-        echo "Updated version.txt to new version: v${_TAG_VERSION}"
+        export CURRENT_VERSION=$(cat version.txt | sed 's/v//')  # Remove the "v" prefix
+        export NEW_VERSION=$((CURRENT_VERSION + 1))  # Increment the numeric part
+        echo "v${NEW_VERSION}" > version.txt  # Write back with "v" prefix
+        echo "Updated version.txt to new version: v${NEW_VERSION}"
 
   # Step 3: Print the Version to Confirm
   - name: 'ubuntu'

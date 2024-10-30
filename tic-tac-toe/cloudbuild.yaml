@@ -1,6 +1,6 @@
 substitutions:
   _USER: "Rahul"
-  _TAG_NAME: "v${BUILD_ID}"  # Set your actual project ID here
+  _TAG_NAME: "v1"  # Set your actual project ID here
 
 steps:
   - name: 'ubuntu'
@@ -22,10 +22,10 @@ steps:
     args:
       - '-c'
       - |
-        export TAG_VERSION=$(($(cat version.txt) + 1))
-        echo "${TAG_VERSION}" > version.txt
+        export _TAG_VERSION=$(($(cat version.txt) + 1))
+        echo "${_TAG_VERSION}" > version.txt
         echo "Hello ${_USER}"
-        echo "Your new TagName is v${TAG_VERSION}"
+        echo "Your new TagName is v${_TAG_VERSION}"
 
   # Step 3: Commit and push the updated version.txt back to the repository
   - name: 'gcr.io/cloud-builders/git'
@@ -35,8 +35,8 @@ steps:
       - |
         cd your-repo-name
         git add version.txt
-        git commit -m "Increment version to v${TAG_VERSION}"
-        git push origin main  # Make sure your branch name is correct      
+        git commit -m "Increment version to v${_TAG_VERSION}"
+        git push origin main  # Make sure your branch name is correct   
 
 options:
   automapSubstitutions: true

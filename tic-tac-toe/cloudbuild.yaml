@@ -3,59 +3,47 @@ substitutions:
   _TAG_NAME: "v1"
 
 steps:
-  # Step 1: Print User Name
-  - name: 'ubuntu'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo "Hello ${_USER}"
-  
-  # Step 2: Print Tag Name
-  - name: 'ubuntu'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo "Your TagName is ${_TAG_NAME}"
-
-  # Step 3: Clone the Repository
+  # Step 1: Clone the Repository
   - name: 'gcr.io/cloud-builders/git'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        git config --global user.email "rahulvhd9@gmail.com"
-        git config --global user.name "rahulrambo9"
         git clone https://github.com/rahulrambo9/tic-tac-toe-with-kafka-mongodb.git
+        cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
+        echo "Repository cloned and navigated to subdirectory."
+        echo "My name is $_USER"
+        echo "My Tag Name is ${_TAG_NAME}"
 
-  # Step 4: Read, Increment, and Display the Version from version.txt in Subdirectory
+  # Step 2: Read, Increment, and Display the Version from version.txt
   - name: 'ubuntu'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
         cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
-        if [ ! -f version.txt ]; then echo "0" > version.txt; fi  # Create version.txt if it doesn't exist
+        if [ ! -f version.txt ]; then 
+          echo "version.txt not found. Initializing with version 0."
+          echo "0" > version.txt
+        fi
+        echo "Current version in version.txt:"
+        cat version.txt
         export _TAG_VERSION=$(($(cat version.txt) + 1))
         echo "${_TAG_VERSION}" > version.txt
-        echo "Hello ${_USER}"
-        echo "Your new TagName is v${_TAG_VERSION}"
+        echo "Updated version.txt to new version: v${_TAG_VERSION}"
 
-  # Step 5: Commit and Push the Updated version.txt Back to the Repository
-  - name: 'gcr.io/cloud-builders/git'
+  # Step 3: Print the Version to Confirm
+  - name: 'ubuntu'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
         cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
-        git add version.txt
-        git commit -m "Increment version to v${_TAG_VERSION}"
-        git push origin main  # Ensure "main" is your correct branch name
+        echo "Final version in version.txt should be:"
+        cat version.txt
 
 options:
   automapSubstitutions: true
   logging: CLOUD_LOGGING_ONLY
 
-# Optional: Specify a timeout
 timeout: '1200s'

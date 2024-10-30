@@ -27,16 +27,16 @@ steps:
           # If _CURRENT_VERSION is empty, set it to 0
           if [ -z "$_CURRENT_VERSION" ]; then
             _CURRENT_VERSION=0
-            echo "No version found. Setting current version to v$_CURRENT_VERSION."
+            echo "No version found. Setting current version to v${_CURRENT_VERSION}"
           fi
 
           # Validate if _CURRENT_VERSION is a valid number
-          if [ $_CURRENT_VERSION -eq $_CURRENT_VERSION ] 2>/dev/null; then
+          if [ ${_CURRENT_VERSION} -eq ${_CURRENT_VERSION} ] 2>/dev/null; then
             # Increment the version
             _NEW_VERSION=$(( _CURRENT_VERSION + 1 ))
             echo "Updated version: v$_NEW_VERSION"
             # Write the new version back to version.txt with 'v' prefix
-            echo "v$_NEW_VERSION" > version.txt  
+            echo "v${_NEW_VERSION}" > version.txt  
           else
             echo "Error: Current version is not a valid number"
             exit 1
@@ -54,7 +54,7 @@ steps:
       - |
         cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
         echo "Hello ${_USER}"
-        echo "Your new TagName is v$_NEW_VERSION"
+        echo "Your new TagName is v${_NEW_VERSION}"
 
 options:
   automapSubstitutions: true

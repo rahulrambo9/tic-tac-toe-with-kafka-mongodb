@@ -17,22 +17,28 @@ steps:
   - name: 'ubuntu'
     entrypoint: 'bash'
     args:
-      - '-c'
-      - |
-        cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
-        if [ -f version.txt ]; then
-          # Read the version and strip the leading 'v'
-          _CURRENT_VERSION=$(cat version.txt | sed 's/v//')  
-          echo "Current version in version.txt: v$_CURRENT_VERSION"
-          # Increment the version
-          _NEW_VERSION=$(( _CURRENT_VERSION + 1 ))  
+     - '-c'
+     - |
+      cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
+      if [ -f version.txt ]; then
+        # Read the current version, strip 'v', and ensure it's a number
+        _CURRENT_VERSION=$(cat version.txt | sed 's/^v//')
+        echo "Current version in version.txt: v$_CURRENT_VERSION"
+        
+        # Increment the version (ensure it's a number)
+        if [[ $_CURRENT_VERSION =~ ^[0-9]+$ ]]; then
+          _NEW_VERSION=$(( _CURRENT_VERSION + 1 ))
           echo "Updated version: v$_NEW_VERSION"
-          # Write the new version back to version.txt
+          # Write the new version back to version.txt with 'v' prefix
           echo "v$_NEW_VERSION" > version.txt  
         else
-          echo "version.txt not found!"
+          echo "Error: Current version is not a valid number"
           exit 1
         fi
+      else
+        echo "version.txt not found!"
+        exit 1
+      fi
 
 
   # Optional: Print user information

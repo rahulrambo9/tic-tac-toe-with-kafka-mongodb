@@ -25,7 +25,7 @@ steps:
           echo "Current version in version.txt: v$_CURRENT_VERSION"
         
           # Validate if _CURRENT_VERSION is a valid number
-          if [[ $_CURRENT_VERSION =~ ^[0-9]+$ ]]; then
+          if [ $_CURRENT_VERSION -eq $_CURRENT_VERSION ] 2>/dev/null; then
             # Increment the version
             _NEW_VERSION=$(( _CURRENT_VERSION + 1 ))
             echo "Updated version: v$_NEW_VERSION"

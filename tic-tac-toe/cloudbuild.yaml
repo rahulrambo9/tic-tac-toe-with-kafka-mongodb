@@ -1,3 +1,6 @@
+substitutions:
+  _USER: "Rahul"
+
 steps:
 - name: 'ubuntu'
   script: |
@@ -9,8 +12,7 @@ steps:
     echo "Your project ID is $PROJECT_ID"
 options:
   automapSubstitutions: true
-substitutions:
-  _USER: "Rahul"
+
 
 options:
   logging: CLOUD_LOGGING_ONLY  # Use this logging option to avoid the error

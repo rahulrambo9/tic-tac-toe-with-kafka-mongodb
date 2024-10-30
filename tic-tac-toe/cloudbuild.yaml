@@ -20,26 +20,21 @@ steps:
       - |
         cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
         if [ -f version.txt ]; then
-          # Read the current version, ensure it starts with 'v'
+          # Read the current version
           _CURRENT_VERSION=$(cat version.txt | sed 's/^v//')
           echo "Current version in version.txt: v$_CURRENT_VERSION"
         
-          # If _CURRENT_VERSION is empty, set it to 0
-          if [ -z "$_CURRENT_VERSION" ]; then
-            _CURRENT_VERSION=0
-            echo "No version found. Setting current version to v$_CURRENT_VERSION."
-          fi
-
           # Validate if _CURRENT_VERSION is a valid number
-          if [ $_CURRENT_VERSION -eq $_CURRENT_VERSION ] 2>/dev/null; then
+          if [[ $_CURRENT_VERSION =~ ^[0-9]+$ ]]; then
             # Increment the version
             _NEW_VERSION=$(( _CURRENT_VERSION + 1 ))
             echo "Updated version: v$_NEW_VERSION"
             # Write the new version back to version.txt with 'v' prefix
             echo "v$_NEW_VERSION" > version.txt  
           else
-            echo "Error: Current version is not a valid number"
-            exit 1
+            echo "Error: Current version is not a valid number, resetting to v0."
+            _NEW_VERSION=0
+            echo "v$_NEW_VERSION" > version.txt
           fi
         else
           echo "version.txt not found! Setting version to v0."

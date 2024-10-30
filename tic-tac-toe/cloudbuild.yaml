@@ -1,0 +1,19 @@
+steps:
+- name: 'ubuntu'
+  script: |
+    #!/usr/bin/env bash
+    echo "Hello $_USER"
+- name: 'ubuntu'
+  script: |
+    #!/usr/bin/env bash
+    echo "Your project ID is $PROJECT_ID"
+options:
+  automapSubstitutions: true
+substitutions:
+  _USER: "Rahul"
+
+options:
+  logging: CLOUD_LOGGING_ONLY  # Use this logging option to avoid the error
+
+# Optional: Specify a timeout
+timeout: '1200s'  # Adjust the timeout as needed  

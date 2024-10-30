@@ -1,6 +1,6 @@
 substitutions:
   _USER: "Rahul"
-
+  _CURRENT_VERSION: "v1"  # Placeholder for reading from version.txt
 
 steps:
   # Step 1: Clone the repository
@@ -26,7 +26,7 @@ steps:
           echo "Current version in version.txt: v$_CURRENT_VERSION"
         
           # Check if _CURRENT_VERSION is a valid number
-          if [[ $_CURRENT_VERSION =~ ^[0-9]+$ ]]; then
+          if [ "$_CURRENT_VERSION" -eq "$_CURRENT_VERSION" ] 2>/dev/null; then
             # Increment the version
             _NEW_VERSION=$(( _CURRENT_VERSION + 1 ))
             echo "Updated version: v$_NEW_VERSION"
@@ -51,17 +51,17 @@ steps:
         echo "Your new TagName is v${_NEW_VERSION}"  # Note: This variable is local to the previous step
 
   # Step 4: Commit and push the updated version.txt back to the repository
-  - name: 'gcr.io/cloud-builders/git'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
-        git config --global user.email "rahulvhd9@gmail.com"
-        git config --global user.name "rahulrambo9"
-        git add version.txt
-        git commit -m "Increment version to v$_NEW_VERSION"  # Using the new version directly
-        git push origin main  # Make sure your branch name is correct   
+  # - name: 'gcr.io/cloud-builders/git'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
+  #       git config --global user.email "rahulvhd9@gmail.com"
+  #       git config --global user.name "rahulrambo9"
+  #       git add version.txt
+  #       git commit -m "Increment version to v$_NEW_VERSION"  # Using the new version directly
+  #       git push origin main  # Make sure your branch name is correct   
 
 options:
   automapSubstitutions: true

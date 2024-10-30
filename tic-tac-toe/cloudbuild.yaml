@@ -13,7 +13,7 @@ steps:
         cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
         echo "Repository cloned and navigated to subdirectory."
 
-  # Step 2: Read, Strip Prefix, Increment, and Display the Version from version.txt
+  # Step 2: Read, Increment, and Display the Version from version.txt
   - name: 'ubuntu'
     entrypoint: 'bash'
     args:

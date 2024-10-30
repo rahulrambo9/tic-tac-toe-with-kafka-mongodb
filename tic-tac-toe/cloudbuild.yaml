@@ -16,6 +16,17 @@ steps:
       - '-c'
       - |
         echo "Your TagName is ${_TAG_NAME}"
+
+  - name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        git config --global user.email "rahulvhd9@gmail.com"
+        git config --global user.name "rahulrambo9"
+        git clone https://github.com/rahulrambo9/tic-tac-toe-with-kafka-mongodb.git
+        cd tic-tac-toe
+
     # Step 2: Read, increment, and display the version from version.txt
   - name: 'ubuntu'
     entrypoint: 'bash'
@@ -33,7 +44,7 @@ steps:
     args:
       - '-c'
       - |
-        cd your-repo-name
+        cd tic-tac-toe
         git add version.txt
         git commit -m "Increment version to v${_TAG_VERSION}"
         git push origin main  # Make sure your branch name is correct   

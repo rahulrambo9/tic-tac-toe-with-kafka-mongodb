@@ -1,5 +1,5 @@
 substitutions:
-  _USER: "Rahu"
+  _USER: "Rahul"
   _TAG_NAME: "v1"  # Set your actual project ID here
 
 steps:

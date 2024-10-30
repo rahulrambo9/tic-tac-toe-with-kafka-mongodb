@@ -1,6 +1,6 @@
 substitutions:
   _USER: "Rahul"
-  _CURRENT_VERSION: "v1"  # Placeholder for reading from version.txt
+
 
 steps:
   # Step 1: Clone the repository
@@ -13,33 +13,33 @@ steps:
         cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
         echo "Repository cloned and navigated to subdirectory."
 
-  # Step 2: Read the current version from version.txt
+  # Step 2: Read and increment the version
   - name: 'ubuntu'
     entrypoint: 'bash'
     args:
-     - '-c'
-     - |
-      cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
-      if [ -f version.txt ]; then
-        # Read the current version, strip 'v', and ensure it's a number
-        _CURRENT_VERSION=$(cat version.txt | sed 's/^v//')
-        echo "Current version in version.txt: v$_CURRENT_VERSION"
+      - '-c'
+      - |
+        cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
+        if [ -f version.txt ]; then
+          # Read the current version, ensure it starts with 'v' and strip 'v'
+          _CURRENT_VERSION=$(cat version.txt | sed 's/^v//')
+          echo "Current version in version.txt: v$_CURRENT_VERSION"
         
-        # Increment the version (ensure it's a number)
-        if [[ $_CURRENT_VERSION =~ ^[0-9]+$ ]]; then
-          _NEW_VERSION=$(( _CURRENT_VERSION + 1 ))
-          echo "Updated version: v$_NEW_VERSION"
-          # Write the new version back to version.txt with 'v' prefix
-          echo "v$_NEW_VERSION" > version.txt  
+          # Check if _CURRENT_VERSION is a valid number
+          if [[ $_CURRENT_VERSION =~ ^[0-9]+$ ]]; then
+            # Increment the version
+            _NEW_VERSION=$(( _CURRENT_VERSION + 1 ))
+            echo "Updated version: v$_NEW_VERSION"
+            # Write the new version back to version.txt with 'v' prefix
+            echo "v$_NEW_VERSION" > version.txt  
+          else
+            echo "Error: Current version is not a valid number"
+            exit 1
+          fi
         else
-          echo "Error: Current version is not a valid number"
+          echo "version.txt not found!"
           exit 1
         fi
-      else
-        echo "version.txt not found!"
-        exit 1
-      fi
-
 
   # Optional: Print user information
   - name: 'ubuntu'
@@ -51,17 +51,17 @@ steps:
         echo "Your new TagName is v${_NEW_VERSION}"  # Note: This variable is local to the previous step
 
   # Step 4: Commit and push the updated version.txt back to the repository
-  # - name: 'gcr.io/cloud-builders/git'
-  #   entrypoint: 'bash'
-  #   args:
-  #     - '-c'
-  #     - |
-  #       cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
-  #       git config --global user.email "rahulvhd9@gmail.com"
-  #       git config --global user.name "rahulrambo9"
-  #       git add version.txt
-  #       git commit -m "Increment version to v$_NEW_VERSION"  # Using the new version directly
-  #       git push origin main  # Make sure your branch name is correct   
+  - name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
+        git config --global user.email "rahulvhd9@gmail.com"
+        git config --global user.name "rahulrambo9"
+        git add version.txt
+        git commit -m "Increment version to v$_NEW_VERSION"  # Using the new version directly
+        git push origin main  # Make sure your branch name is correct   
 
 options:
   automapSubstitutions: true

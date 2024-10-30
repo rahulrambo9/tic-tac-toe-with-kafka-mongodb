@@ -1,6 +1,6 @@
 substitutions:
   _USER: "Rahul"
-  _TAG_NAME: "v1"  # Set your actual project ID here
+  _TAG_NAME: "v${BUILD_ID}"  # Set your actual project ID here
 
 steps:
   - name: 'ubuntu'
@@ -15,7 +15,7 @@ steps:
     args:
       - '-c'
       - |
-        echo "Your project ID is ${_TAG_NAME}"
+        echo "Your TagName is ${_TAG_NAME}"
 
 options:
   automapSubstitutions: true

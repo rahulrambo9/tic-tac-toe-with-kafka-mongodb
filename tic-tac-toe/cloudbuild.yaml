@@ -21,15 +21,19 @@ steps:
       - |
         cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
         if [ -f version.txt ]; then
-          _CURRENT_VERSION=$(cat version.txt | sed 's/v//')  # Strip the 'v' for incrementing
+          # Read the version and strip the leading 'v'
+          _CURRENT_VERSION=$(cat version.txt | sed 's/v//')  
           echo "Current version in version.txt: v$_CURRENT_VERSION"
-          _NEW_VERSION=$(( _CURRENT_VERSION + 1 ))  # Increment version number
+          # Increment the version
+          _NEW_VERSION=$(( _CURRENT_VERSION + 1 ))  
           echo "Updated version: v$_NEW_VERSION"
-          echo "v$_NEW_VERSION" > version.txt  # Write new version back to file
+          # Write the new version back to version.txt
+          echo "v$_NEW_VERSION" > version.txt  
         else
           echo "version.txt not found!"
           exit 1
         fi
+
 
   # Optional: Print user information
   - name: 'ubuntu'
@@ -41,17 +45,17 @@ steps:
         echo "Your new TagName is v${_NEW_VERSION}"  # Note: This variable is local to the previous step
 
   # Step 4: Commit and push the updated version.txt back to the repository
-  - name: 'gcr.io/cloud-builders/git'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
-        git config --global user.email "rahulvhd9@gmail.com"
-        git config --global user.name "rahulrambo9"
-        git add version.txt
-        git commit -m "Increment version to v$_NEW_VERSION"  # Using the new version directly
-        git push origin main  # Make sure your branch name is correct   
+  # - name: 'gcr.io/cloud-builders/git'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       cd tic-tac-toe-with-kafka-mongodb/tic-tac-toe
+  #       git config --global user.email "rahulvhd9@gmail.com"
+  #       git config --global user.name "rahulrambo9"
+  #       git add version.txt
+  #       git commit -m "Increment version to v$_NEW_VERSION"  # Using the new version directly
+  #       git push origin main  # Make sure your branch name is correct   
 
 options:
   automapSubstitutions: true
